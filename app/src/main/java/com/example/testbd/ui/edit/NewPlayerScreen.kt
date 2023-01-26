@@ -11,8 +11,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+/**
+ * idPlayer
+ * - si es cero = crear nuevo player
+ * - distinto de cero = editar player
+ */
 @Composable
 fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) {
+
+    val state by viewModel.state.collectAsState()
 
     var surnameText by remember { mutableStateOf("") }
     var nationText by remember { mutableStateOf("") }

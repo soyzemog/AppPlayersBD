@@ -15,8 +15,8 @@ import com.example.testbd.data.model.Player
 @Composable
 fun PlayerItem(
     player: Player,
-    onClick: () -> Unit
-    //onDeletePlayer: () -> Unit
+    onEditPlayerClick: () -> Unit,
+    onDeletePlayerClick: () -> Unit
 ) {
     Card(
         backgroundColor = Color.White,
@@ -64,14 +64,14 @@ fun PlayerItem(
                 )
             }
             Row {
-                IconButton(onClick = onClick) {
+                IconButton(onClick = onEditPlayerClick) {
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = null,
                         tint = Color.Green
                     )
                 }
-                IconButton(onClick = { /*onDeletePlayer*/ } ) {
+                IconButton(onClick =  onDeletePlayerClick) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,

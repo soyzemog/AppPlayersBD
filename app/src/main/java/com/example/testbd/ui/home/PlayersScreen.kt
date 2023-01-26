@@ -36,7 +36,6 @@ fun PlayersScreen(
 @Composable
 fun PlayersScreen(
     onEditPlayerClick: (Player) -> Unit,
-    //onDeletePlayerClick: (Player) -> Unit,
     viewModel: PlayersViewModel = viewModel()
 ) {
 
@@ -59,8 +58,8 @@ fun PlayersScreen(
 
             PlayerItem(
                 player = player,
-                onClick = { onEditPlayerClick(player) }
-                //onDeletePlayerClick = { onDeletePlayerClick(it) }
+                onEditPlayerClick = { onEditPlayerClick(player) },
+                onDeletePlayerClick = { viewModel.deletePlayer(player) }
             )
         }
     }

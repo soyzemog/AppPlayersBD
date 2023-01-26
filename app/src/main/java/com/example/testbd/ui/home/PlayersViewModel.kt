@@ -42,9 +42,19 @@ class PlayersViewModel: ViewModel() {
     }
 
 
+    fun deletePlayer(player: Player) {
+        val index = _state.value.items.indexOf(player)
+        val updatedPlayers = _state.value.items.toMutableList()
+        updatedPlayers.removeAt(index)
+        _state.value = _state.value.copy(
+            items = updatedPlayers
+        )
+    }
+
+
     data class UiState(
         val loading: Boolean = false,
-        val items: List<Player> = emptyList()
+        var items: List<Player> = emptyList()
     )
 
 }
