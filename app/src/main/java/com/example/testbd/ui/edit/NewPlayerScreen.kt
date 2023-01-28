@@ -19,13 +19,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) {
 
-    val state by viewModel.state.collectAsState()
+    //val state by viewModel.state.collectAsState()
 
-    var surnameText by remember { mutableStateOf("") }
-    var nationText by remember { mutableStateOf("") }
-    var teamText by remember { mutableStateOf("") }
-    var posText by remember { mutableStateOf("") }
-    var wearText by remember { mutableStateOf("") }
+    //var surnameText by remember { mutableStateOf("") }
+    //var nationText by remember { mutableStateOf("") }
+    //var teamText by remember { mutableStateOf("") }
+    //var posText by remember { mutableStateOf("") }
+    //var wearText by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -36,21 +36,10 @@ fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) 
         Column(
             horizontalAlignment = Alignment.End
         ) {
-            if (idPlayer != 0) {
-
-                val editPlayer = viewModel.loadPlayer(idPlayer)
-
-                surnameText = editPlayer.surname
-                nationText = editPlayer.nationality.toString()
-                teamText = editPlayer.team?.first() ?: ""
-                posText = editPlayer.position?.first() ?: ""
-                wearText = editPlayer.wear?.first().toString()
-
-            }
 
             TextField(
-                value = surnameText,
-                onValueChange = { surnameText = it },
+                value = viewModel.surname,
+                onValueChange = { viewModel.editSurname(it) },
                 label = { Text(text = "Surname") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -58,8 +47,8 @@ fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) 
             Spacer(modifier = Modifier.padding(12.dp))
 
             TextField(
-                value = nationText,
-                onValueChange = { nationText = it },
+                value = viewModel.nation,
+                onValueChange = { viewModel.editNation(it) },
                 label = { Text(text = "Nationality") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -67,8 +56,8 @@ fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) 
             Spacer(modifier = Modifier.padding(12.dp))
 
             TextField(
-                value = teamText,
-                onValueChange = { teamText = it },
+                value = viewModel.team,
+                onValueChange = { viewModel.editTeam(it) },
                 label = { Text(text = "Team") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -76,8 +65,8 @@ fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) 
             Spacer(modifier = Modifier.padding(12.dp))
 
             TextField(
-                value = posText,
-                onValueChange = { posText = it },
+                value = viewModel.position,
+                onValueChange = { viewModel.editPosition(it) },
                 label = { Text(text = "Position") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -85,8 +74,8 @@ fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) 
             Spacer(modifier = Modifier.padding(12.dp))
 
             TextField(
-                value = wearText,
-                onValueChange = { wearText = it },
+                value = viewModel.wear,
+                onValueChange = { viewModel.editWear(it) },
                 label = { Text(text = "Wear") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
@@ -116,11 +105,11 @@ fun NewPlayerScreen(idPlayer: Int, viewModel: NewPlayerViewModel = viewModel()) 
                 OutlinedButton(
                     modifier = Modifier.width(110.dp),
                     onClick = {
-                        surnameText = ""
-                        nationText = ""
-                        teamText = ""
-                        posText = ""
-                        wearText = ""
+                        viewModel.editSurname("")
+                        viewModel.editNation("")
+                        viewModel.editTeam("")
+                        viewModel.editPosition("")
+                        viewModel.editWear("")
                     }
                 ) {
                     Text(text = "Cancel")

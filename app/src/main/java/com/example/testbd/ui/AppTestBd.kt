@@ -29,7 +29,9 @@ fun AppTestBd() {
                 )
             },
             floatingActionButton = {
-                FloatingBtn { appState.onNavItemClick(NavItem.NEWPLAYER) }
+                if(appState.currentRoute == NavItem.PLAYERS.navCommand.route) {
+                    FloatingBtn { appState.onNavItemClick(NavItem.NEWPLAYER) }
+                }
             },
             scaffoldState = rememberScaffoldState()
         ) { padding ->

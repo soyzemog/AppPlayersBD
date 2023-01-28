@@ -3,12 +3,9 @@ package com.example.testbd.ui.navigation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.example.testbd.ui.edit.NewPlayerScreen
 import com.example.testbd.ui.home.PlayersScreen
 
@@ -47,12 +44,18 @@ private fun NavGraphBuilder.playersNav(navController: NavHostController) {
 
         }
 
-        composable(NavCommand.ContentEdit(Feature.EDIT)) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt(NavArg.PlayerId.key)
-            requireNotNull(id)
-
-            NewPlayerScreen(id)
-        }
+        composable(
+            NavCommand.ContentEdit(Feature.EDIT).route,
+            arguments = listOf(
+                navArgument("playerId") {
+                    type = NavType.IntType
+                }) )
+        {
+                /**
+                 * no recomendable.. usar saved state handle
+                 */
+                NewPlayerScreen(0)
+            }
 
     }
 }
@@ -78,7 +81,6 @@ private fun NavGraphBuilder.newPlayerNav(navController: NavHostController) {
 
     }
 }
-
 
 
 private fun NavGraphBuilder.composable(
