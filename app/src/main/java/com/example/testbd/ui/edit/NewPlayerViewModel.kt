@@ -2,56 +2,24 @@ package com.example.testbd.ui.edit
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testbd.data.model.Player
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.example.testbd.data.domain.Player
+import com.example.testbd.data.repositories.PlayerRepository
 import kotlinx.coroutines.launch
+
 /**
-class NewPlayerViewModel: ViewModel() {
-
-    private val _state = MutableStateFlow(UiState())
-    val state: StateFlow<UiState> = _state.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-           _state.value = UiState(surname = "")
-        }
-    }
-
-    fun savePlayer(player: Player) {
-        /** guardar en bd **/
-    }
-
-    fun loadPlayer(id: Int): Player {
-        return Player(
-            1,
-            "Messi",
-            "Argentina",
-            listOf("PSG"),
-            listOf("MCA"),
-            listOf(30)
-        )
-    }
-
-    fun editSurname(surname: String) {
-        _state.value.surname = surname
-    }
-
-
-    data class UiState(
-        //val item: Player = Player()
-        var surname: String = ""
-    )
-
-} **/
-
-class NewPlayerViewModel(savedStateHandle: SavedStateHandle): ViewModel() {
+ * savedStateHandle
+ * . fue la solucion al problema de llenado de datos en los textfields
+ * . ya que el if (q tengo en el init) lo tenia en el composable 'NewPlayersScreen'
+ *      y si bien completaba, no dejaba modificar el textfield
+ */
+class NewPlayerViewModel(
+    private val playerRepository: PlayerRepository,
+    savedStateHandle: SavedStateHandle
+): ViewModel() {
 
     var surname by mutableStateOf("")
         private set
@@ -66,31 +34,41 @@ class NewPlayerViewModel(savedStateHandle: SavedStateHandle): ViewModel() {
 
     init {
         viewModelScope.launch {
+            /**
+             * verificamos si el idPlayer tiene valor
+             * . si tiene es porque vamos a editar un player (completa los textfield)
+             * . si no tiene es porque vamos a crear uno nuevo
+             */
             val idPlayer = savedStateHandle.get<Int>("playerId") ?: 0
             if (idPlayer != 0) {
 
-                val editPlayer = loadPlayer(idPlayer)
+                val editPlayer = playerRepository.getPlayer(idPlayer)
 
                 surname = editPlayer.surname
                 nation = editPlayer.nationality.toString()
-                team = editPlayer.team?.first() ?: ""
-                position = editPlayer.position?.first() ?: ""
-                wear = editPlayer.wear?.first().toString()
+                team = editPlayer.team.toString()
+                position = editPlayer.position.toString()
+                wear = editPlayer.wear.toString()
 
             }
         }
     }
 
-    fun loadPlayer(id: Int): Player {
-        return Player(
+    /** fun loadPlayer(idIn: Int): Player {
+        /**return Player(
             1,
             "Messi",
             "Argentina",
-            listOf("PSG"),
-            listOf("MCA"),
-            listOf(30)
-        )
-    }
+            "PSG",
+            "MCA",
+            30
+        ) **/
+
+        viewModelScope.launch {
+            player = playerRepository.getPlayer(idIn)
+        }
+        return player
+    } **/
 
     fun editSurname(surnameIN: String) {
         surname = surnameIN
@@ -110,6 +88,11 @@ class NewPlayerViewModel(savedStateHandle: SavedStateHandle): ViewModel() {
 
     fun savePlayer(player: Player) {
         /** guardar en bd **/
+        viewModelScope.launch {
+
+            playerRepository.insertPlayer(player)
+
+        }
     }
 
 }

@@ -45,17 +45,15 @@ private fun NavGraphBuilder.playersNav(navController: NavHostController) {
         }
 
         composable(
-            NavCommand.ContentEdit(Feature.EDIT).route,
+            route = NavCommand.ContentEdit(Feature.EDIT).route,
             arguments = listOf(
                 navArgument("playerId") {
                     type = NavType.IntType
-                }) )
-        {
-                /**
-                 * no recomendable.. usar saved state handle
-                 */
-                NewPlayerScreen(0)
-            }
+                }
+            )
+        ) {
+            NewPlayerScreen()
+        }
 
     }
 }
@@ -70,13 +68,7 @@ private fun NavGraphBuilder.newPlayerNav(navController: NavHostController) {
     ) {
 
         composable(NavCommand.ContentType(Feature.NEWPLAYER)) {
-
-            /**
-             * cuando creo un nuevo player, le envio un cero,
-             * si usamos esta pantalla para el edit, si le envio un id existente
-             */
-            NewPlayerScreen(0)
-
+            NewPlayerScreen()
         }
 
     }

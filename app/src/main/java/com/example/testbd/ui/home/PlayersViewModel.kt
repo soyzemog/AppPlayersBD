@@ -2,19 +2,21 @@ package com.example.testbd.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testbd.data.model.Player
-import kotlinx.coroutines.delay
+import com.example.testbd.data.domain.Player
+import com.example.testbd.data.repositories.PlayerRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PlayersViewModel: ViewModel() {
+class PlayersViewModel(
+    private val playerRepository: PlayerRepository
+): ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    init {
+    /** init {
         viewModelScope.launch {
 
             _state.value = UiState(loading = true)
@@ -23,21 +25,43 @@ class PlayersViewModel: ViewModel() {
 
             _state.value = UiState(items = listOf(
                 Player(1, "Messi", "Argentina",
-                    listOf("Barcelona", "PSG"), listOf("MCA", "ED"),
-                    listOf(10, 30)),
+                    "PSG", "MCA", 30),
                 Player(2, "Riquelme", "Argentina",
-                    listOf("BOCA Jrs", "Villareal"), listOf("MCA"),
-                    listOf(10, 8)),
+                    "BOCA Jrs", "MCA", 10),
                 Player(3, "Ronaldinho", "Brazil",
-                    listOf("PSG", "Barcelona"), listOf("MCA", "EI"),
-                    listOf(10, 7)),
+                    "Barcelona", "MCA", 10),
                 Player(4, "Pirlo", "Italia",
-                    listOf("Milan", "Juventus"), listOf("MCD", "MC"),
-                    listOf(21)),
+                    "Milan", "MCD", 21),
                 Player(5, "Zidane", "Francia",
-                    listOf("Juventus", "Real Madrid"), listOf("MC", "MCO"),
-                    listOf(10, 5))
+                    "Real Madrid", "MC", 5)
                 ))
+        }
+    } **/
+
+    init {
+        viewModelScope.launch {
+            if (playerRepository.getPlayers().isNotEmpty()) {
+
+                _state.value = UiState(
+                    items = playerRepository.getPlayers()
+                )
+
+            } else {
+
+                _state.value = UiState(items = listOf(
+                    Player( "Messi", "Argentina",
+                        "PSG", "MCA", 30),
+                    Player( "Riquelme", "Argentina",
+                        "BOCA Jrs", "MCA", 10),
+                    Player( "Ronaldinho", "Brazil",
+                        "Barcelona", "MCA", 10),
+                    Player( "Pirlo", "Italia",
+                        "Milan", "MCD", 21),
+                    Player( "Zidane", "Francia",
+                        "Real Madrid", "MC", 5)
+                ))
+
+            }
         }
     }
 

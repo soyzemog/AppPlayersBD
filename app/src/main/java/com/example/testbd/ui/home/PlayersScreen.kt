@@ -14,24 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.testbd.data.model.Player
+import com.example.testbd.data.domain.Player
 
-/** @Composable
-fun PlayersScreen(
-    players: List<Player>
-) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(1),
-        contentPadding = PaddingValues(4.dp)
-    ) {
-        items(players) {
-            PlayerItem(
-                player = it,
-                //onClick = { onPersonClick(it) }
-            )
-        }
-    }
-} **/
 
 @Composable
 fun PlayersScreen(
