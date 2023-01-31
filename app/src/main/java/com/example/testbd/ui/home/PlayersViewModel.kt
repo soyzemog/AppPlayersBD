@@ -36,12 +36,13 @@ class PlayersViewModel @Inject constructor(
             playerRepository.getPlayers().collect {
                 if (it.isNotEmpty()) {
 
-                    _state.value = UiState(
-                        items = it
-                    )
+                    _state.value = UiState(loading = true)
+
+                    _state.value = UiState(items = it)
 
                 } else {
-                    // mostrar msj
+                    // mostrar msj si bd esta vacia
+                    _state.value = UiState(showMessage = "The DB is empty")
                 }
             }
         }
@@ -93,6 +94,7 @@ class PlayersViewModel @Inject constructor(
 
     data class UiState(
         val loading: Boolean = false,
+        val showMessage: String = "",
         var items: List<Player> = emptyList()
     )
 
