@@ -8,18 +8,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testbd.data.domain.Player
 import com.example.testbd.data.repositories.PlayerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-/**
- * savedStateHandle
- * . fue la solucion al problema de llenado de datos en los textfields
- * . ya que el if (q tengo en el init) lo tenia en el composable 'NewPlayersScreen'
- *      y si bien completaba, no dejaba modificar el textfield
- */
-class NewPlayerViewModel(
+@HiltViewModel
+class NewPlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
+
+    var id: Int? by mutableStateOf(null)
+        private set
 
     var surname by mutableStateOf("")
         private set
@@ -40,11 +41,16 @@ class NewPlayerViewModel(
              * . si no tiene es porque vamos a crear uno nuevo
              */
             val idPlayer = savedStateHandle.get<Int>("playerId") ?: 0
-            if (idPlayer != 0) {
 
+            if (idPlayer != 0) {
                 val editPlayer = playerRepository.getPlayer(idPlayer)
 
-                surname = editPlayer.surname
+                /**
+                 * lo necesito para saber a quien actualizar cuando edite un player
+                 */
+                id = idPlayer
+
+                surname = editPlayer.surname.toString()
                 nation = editPlayer.nationality.toString()
                 team = editPlayer.team.toString()
                 position = editPlayer.position.toString()
@@ -54,22 +60,10 @@ class NewPlayerViewModel(
         }
     }
 
-    /** fun loadPlayer(idIn: Int): Player {
-        /**return Player(
-            1,
-            "Messi",
-            "Argentina",
-            "PSG",
-            "MCA",
-            30
-        ) **/
-
-        viewModelScope.launch {
-            player = playerRepository.getPlayer(idIn)
-        }
-        return player
-    } **/
-
+    /**
+     * estas funciones son para utilizarlos desde NewPlayerScreen
+     * la cual completan los campos con datos de un Player a editar
+     */
     fun editSurname(surnameIN: String) {
         surname = surnameIN
     }
@@ -86,13 +80,38 @@ class NewPlayerViewModel(
         wear = wearIN
     }
 
-    fun savePlayer(player: Player) {
-        /** guardar en bd **/
-        viewModelScope.launch {
 
-            playerRepository.insertPlayer(player)
+    /**
+     * ahora es el viewModel quien se ocupa de crear el objeto Player
+     * ya q antes lo hacia en la ui (lo cual no es correcto)
+     * y luego lo inserta en la bd
+     */
+   fun savePlayer() {
+       viewModelScope.launch {
+           val player = Player(id, surname, nation, team, position, wear.toInt())
+           playerRepository.insertPlayer(player)
+       }
+   }
 
-        }
+    /**
+     * antes lo hacia en ui
+     * ahora le saque esa responsabilidad y se la asigno al viewmodel
+     * - limpio los campos de los textfields
+     */
+    fun cleanFields() {
+       editSurname("")
+        editNation("")
+        editTeam("")
+        editPosition("")
+        editWear("")
     }
 
 }
+
+
+/**
+ * savedStateHandle
+ * . fue la solucion al problema de llenado de datos en los textfields
+ * . ya que el if (q tengo en el init) lo tenia en el composable 'NewPlayersScreen'
+ *      y si bien completaba, no dejaba modificar el textfield
+ */

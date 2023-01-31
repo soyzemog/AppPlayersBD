@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.testbd.ui.common.FloatingBtn
@@ -25,11 +27,26 @@ fun AppTestBd() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "AppTestBD") }
+                    title = { Text(text = "AppTestBD") },
+                    navigationIcon = {
+                        if (appState.showUpNavigation) {
+                            IconButton(
+                                onClick = { appState.onUpClick() }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Go to previous Screen"
+                                )
+                            }
+                        }
+                    }
                 )
             },
             floatingActionButton = {
-                if(appState.currentRoute == NavItem.PLAYERS.navCommand.route) {
+                /**
+                 * si la pantalla actual es la home, muestra floatingbutton
+                 */
+                if(appState.showFloatingButton) {
                     FloatingBtn { appState.onNavItemClick(NavItem.NEWPLAYER) }
                 }
             },

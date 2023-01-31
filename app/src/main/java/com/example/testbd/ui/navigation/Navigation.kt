@@ -36,6 +36,7 @@ private fun NavGraphBuilder.playersNav(navController: NavHostController) {
 
             PlayersScreen(
                 onEditPlayerClick = { player ->
+                    requireNotNull(player.id)
                     navController.navigate(
                         NavCommand.ContentEdit(Feature.EDIT).createNavRoute(player.id)
                     )
@@ -52,6 +53,9 @@ private fun NavGraphBuilder.playersNav(navController: NavHostController) {
                 }
             )
         ) {
+            /**
+             * ahora no necesito mandar un id, ya q de eso se encarga la DI
+             */
             NewPlayerScreen()
         }
 

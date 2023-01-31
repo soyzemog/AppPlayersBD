@@ -13,14 +13,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testbd.data.domain.Player
+import androidx.hilt.navigation.compose.hiltViewModel
 
 
 @Composable
 fun PlayersScreen(
     onEditPlayerClick: (Player) -> Unit,
-    viewModel: PlayersViewModel = viewModel()
+    viewModel: PlayersViewModel = hiltViewModel()
 ) {
 
     val state by viewModel.state.collectAsState()
@@ -49,3 +49,4 @@ fun PlayersScreen(
     }
 
 }
+

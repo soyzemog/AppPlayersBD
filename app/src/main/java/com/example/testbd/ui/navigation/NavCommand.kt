@@ -6,15 +6,22 @@ import androidx.navigation.navArgument
 import com.example.testbd.R
 
 
+/**
+ * contiene las rutas de cada item de navegacion
+ */
 enum class NavItem(
     val navCommand: NavCommand,
     @StringRes val typeName: Int
 ) {
     PLAYERS(NavCommand.ContentType(Feature.PLAYERS), R.string.players),
     NEWPLAYER(NavCommand.ContentType(Feature.NEWPLAYER), R.string.newplayer),
+    EDIT(NavCommand.ContentEdit(Feature.EDIT), R.string.edit)
 }
 
 
+/**
+ * determina los comandos de navegacion
+ */
 sealed class NavCommand(
     internal val feature: Feature,
     internal val subRoute: String = "home",
@@ -46,7 +53,7 @@ sealed class NavCommand(
     }
 
     /** esto simplifica o equivale a lo siguiente:
-     *   - listOf(navArgument("pokemonId") { type = NavType.IntType})
+     *   - listOf(navArgument("playerId") { type = NavType.IntType})
      */
     val args = navArgs.map {
         navArgument(it.key) { type = it.navType }

@@ -34,7 +34,7 @@ fun PlayerItem(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = player.surname,
+                    text = player.surname.toString(),
                     style = MaterialTheme.typography.subtitle1,
                     maxLines = 2 //x si hay nombres largos
                 )

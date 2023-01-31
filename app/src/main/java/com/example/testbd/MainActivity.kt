@@ -6,8 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import com.example.testbd.ui.AppTestBd
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 class MainActivity : ComponentActivity() {

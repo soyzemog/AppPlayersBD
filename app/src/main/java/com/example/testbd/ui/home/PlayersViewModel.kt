@@ -4,77 +4,92 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testbd.data.domain.Player
 import com.example.testbd.data.repositories.PlayerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlayersViewModel(
+@HiltViewModel
+class PlayersViewModel @Inject constructor(
     private val playerRepository: PlayerRepository
 ): ViewModel() {
 
+    /**
+     * utilizo StateFlow (no tiene nada q ver con Flow)
+     * - q es lo q obtengo del playerRepository, al llamar al getPlayers()
+     * - _state, se usa en el viewmodel
+     * - state, es el q uso desde afuera (es decir, en PlayersScreen)
+     */
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    /** init {
-        viewModelScope.launch {
-
-            _state.value = UiState(loading = true)
-
-            delay(2000)
-
-            _state.value = UiState(items = listOf(
-                Player(1, "Messi", "Argentina",
-                    "PSG", "MCA", 30),
-                Player(2, "Riquelme", "Argentina",
-                    "BOCA Jrs", "MCA", 10),
-                Player(3, "Ronaldinho", "Brazil",
-                    "Barcelona", "MCA", 10),
-                Player(4, "Pirlo", "Italia",
-                    "Milan", "MCD", 21),
-                Player(5, "Zidane", "Francia",
-                    "Real Madrid", "MC", 5)
-                ))
-        }
-    } **/
-
     init {
         viewModelScope.launch {
-            if (playerRepository.getPlayers().isNotEmpty()) {
+            /**
+             * .collect
+             * - indica que alguien del otro lado espera resultados (este caso PlayersScreen)
+             *  por lo tanto flow puede emitirlos (el listado de player)
+             */
+            playerRepository.getPlayers().collect {
+                if (it.isNotEmpty()) {
 
-                _state.value = UiState(
-                    items = playerRepository.getPlayers()
-                )
+                    _state.value = UiState(
+                        items = it
+                    )
 
-            } else {
-
-                _state.value = UiState(items = listOf(
-                    Player( "Messi", "Argentina",
-                        "PSG", "MCA", 30),
-                    Player( "Riquelme", "Argentina",
-                        "BOCA Jrs", "MCA", 10),
-                    Player( "Ronaldinho", "Brazil",
-                        "Barcelona", "MCA", 10),
-                    Player( "Pirlo", "Italia",
-                        "Milan", "MCD", 21),
-                    Player( "Zidane", "Francia",
-                        "Real Madrid", "MC", 5)
-                ))
-
+                } else {
+                    // mostrar msj
+                }
             }
         }
     }
 
 
     fun deletePlayer(player: Player) {
-        val index = _state.value.items.indexOf(player)
+        /**
+         * 1ero lo borramos de la list que se pinta en pantalla
+         */
+        /** val index = _state.value.items.indexOf(player)
         val updatedPlayers = _state.value.items.toMutableList()
         updatedPlayers.removeAt(index)
+
+        /**
+         * luego lo borro de la bd
+         */
+        viewModelScope.launch {
+            if (_state)
+            if (playerRepository.getPlayers().isNotEmpty()) {
+                playerRepository.deletePlayer(player)
+            }
+        }
+
         _state.value = _state.value.copy(
             items = updatedPlayers
-        )
+        ) **/
+
+        /**
+         * ya no es necesario borrarlo de la vista, basta con borrarlo de la bd
+         * ya q al usar flow, se detecta q hay cambios en la bd y se refresca la pantalla
+         */
+
+        if (_state.value.items.contains(player)) {
+            viewModelScope.launch { playerRepository.deletePlayer(player) }
+        }
     }
 
+    /**
+     * esta funcion es util, si no se utiliza Flow
+     * fun reloadPlayers() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                items = playerRepository.getPlayers()
+            )
+        }
+        }
+     */
 
     data class UiState(
         val loading: Boolean = false,

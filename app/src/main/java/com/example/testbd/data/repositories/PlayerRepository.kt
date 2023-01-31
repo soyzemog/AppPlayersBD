@@ -2,6 +2,11 @@ package com.example.testbd.data.repositories
 
 import com.example.testbd.data.local.entities.PlayerDao
 import com.example.testbd.data.domain.Player
+import com.example.testbd.data.mapper.toDomain
+import com.example.testbd.data.mapper.toEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 /**
  * - sirve para convertir 'PlayerEntity' en 'Player'
@@ -12,11 +17,14 @@ class PlayerRepository(
     private val playerDao: PlayerDao
 ) {
 
-    suspend fun getPlayers(): List<Player> {
-        val entities = playerDao.getPlayers()
-        return entities.map { playerEntity ->
-            playerEntity.toDomain()
-        }
+    /**
+     * devuelve un listado de Flow de players (conviertiendo de entity a dominio)
+     * - uso Flow para q se refresque la info q muestro en pantalla con respecto
+     * a lo q tengo en bd (automaticamente)
+     * - continua en PlayerViewModel
+     */
+    fun getPlayers(): Flow<List <Player>> {
+        return playerDao.getPlayers().map { it.map { playerEntity -> playerEntity.toDomain() } }
     }
 
 

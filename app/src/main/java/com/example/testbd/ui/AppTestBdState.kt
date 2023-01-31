@@ -34,10 +34,18 @@ class AppTestBdState(val navController: NavHostController) {
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
 
 
-    /** si estamos en pantalla ppal no muestra btn arrowback, y si
-     * esta en newPlayer(edit) lo muestra  **/
+    /**
+     * muestra boton arrowback si esta en pantalla newplayer o edit
+     * (son misma pantalla distinta ruta)
+     */
      val showUpNavigation: Boolean
-        @Composable get() = currentRoute !in NavItem.values().map { it.navCommand.route }
+        @Composable get() = (
+                currentRoute == NavItem.NEWPLAYER.navCommand.route ||
+                        currentRoute == NavItem.EDIT.navCommand.route
+                )
+
+    val showFloatingButton: Boolean
+        @Composable get() = currentRoute == NavItem.PLAYERS.navCommand.route
 
 
     // Logica de UI
