@@ -18,5 +18,5 @@
 <p float="center">
   <img src="screenshots/cap1.png" width="250" />
   <img src="screenshots/cap2.png" width="250" />
-  <img src="screenshots/gif.gif" width="250" />
+  <img src="screenshots/gif.gif" width="800" height="444"/>
 </p>
