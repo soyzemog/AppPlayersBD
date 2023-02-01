@@ -18,7 +18,4 @@
 <p float="center">
   <img src="screenshots/cap1.png" width="250" />
   <img src="screenshots/cap2.png" width="250" />
-  <img src="screenshots/gif1.gif" width="250" />
-  <img src="screenshots/gif2.gif" width="250" />
-  <img src="screenshots/gif3.gif" width="250" />
 </p>
