@@ -3,7 +3,7 @@
 
 [![Android Studio](https://img.shields.io/badge/Android_Studio-2022.1.1-blue.svg?longCache=true&style=popout-square)](https://developer.android.com/studio)
 [![Android](https://img.shields.io/badge/Android-13-green.svg?longCache=true&style=popout-square)](https://www.android.com)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.6-blueviolet?longCache=true&style=popout-square)](https://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.20-blueviolet?longCache=true&style=popout-square)](https://kotlinlang.org)
 
 
 * [Jetpack Compose](https://developer.android.com/jetpack/compose)
